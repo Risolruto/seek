@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="aGoods">
+
+<delete id="deleteAdminGoods" parameterType="hashmap">
+<![CDATA[
+   DELETE FROM GOODS WHERE GOODS_NUM = #{GOODS_NUM}
+   ]]>
+</delete>
+
+<delete id="deleteAdminGoodsATT" parameterType="hashmap">
+<![CDATA[
+   DELETE FROM GOODS_ATTRIBUTE WHERE GOODS_NUM = #{GOODS_NUM}
+   ]]>
+</delete>
+
+<select id="aGoodsList" parameterType="hashmap" resultType="hashmap">
+   <![CDATA[
+   SELECT 
+      G.GOODS_NUM,
+      G.GOODS_NAME,
+      G.GOODS_PRICE,
+      G.GOODS_DATE,
+      G.GOODS_COUNT, 
+      G.GOODS_IMAGE,
+      G.GOODS_CATE,
+      A.GOODS_WEIGHT,
+      A.GOODS_ATT_AMOUNT
+      
+      
+   FROM
+      GOODS G, GOODS_ATTRIBUTE A
+   WHERE
+   	  G.GOODS_NUM = A.GOODS_NUM
+      
+   ORDER BY G.GOODS_NUM DESC
+   		
+      ]]>
+</select>
+
+<select id="listPage" parameterType="hashmap" resultType="hashmap">
+	SELECT 
+      GOODS_NUM,
+      GOODS_NAME,
+      GOODS_PRICE,
+      GOODS_DATE,
+      GOODS_COUNT, 
+      GOODS_IMAGE,
+      GOODS_CATE,
+      GOODS_WEIGHT,
+      GOODS_ATT_AMOUNT   
+   FROM	(
+     	SELECT G.GOODS_NUM,
+      		G.GOODS_NAME,
+		    G.GOODS_PRICE,
+		    G.GOODS_DATE,
+		    G.GOODS_COUNT, 
+		    G.GOODS_IMAGE,
+		    G.GOODS_CATE,
+		    A.GOODS_WEIGHT,
+		    A.GOODS_ATT_AMOUNT,
+		    ROW_NUMBER() OVER(ORDER BY G.GOODS_NUM DESC) AS RNUM
+		FROM GOODS G, GOODS_ATTRIBUTE A
+   		) MP
+   WHERE RNUM BETWEEN #{rowStart} AND #{rowEnd}
+   ORDER BY GOODS_NUM DESC
+	</select>
+	
+<select id="listCount" resultType="int">
+	<![CDATA[
+		SELECT COUNT(GOODS_NUM)
+		  FROM GOODS
+		 WHERE GOODS_NUM > 0
+	]]>
+	</select>
+
+
+<update id="updateGoods" parameterType="hashmap"> 
+	<![CDATA[
+		UPDATE  GOODS
+		SET     GOODS_NAME = #{GOODS_NAME},
+			GOODS_CONTENT = #{GOODS_CONTENT},
+			GOODS_PRICE = #{GOODS_PRICE},
+			GOODS_DATE = sysdate,
+			GOODS_CATE = #{GOODS_CATE},
+			GOODS_IMAGE = #{GOODS_IMAGE},
+			GOODS_CONTENTIMAGE = 'B',
+			GOODS_POINT = #{GOODS_PRICE}*0.01
+		WHERE   GOODS_NUM = #{GOODS_NUM}
+		]]>
+</update>
+
+
+<update id="attributeDelete" parameterType="hashmap"> <!-- 상품 옵션 업뎃 -->
+		<![CDATA[
+			UPDATE  GOODS_ATTRIBUTE
+			  SET 
+			  GOODS_STATUS = '1'
+			WHERE   GOODS_NUM = #{GOODS_NUM}
+		]]>
+	</update>
+
+</mapper>
