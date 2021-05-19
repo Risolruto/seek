@@ -36,5 +36,10 @@
          AND       MEM_DEL_GB = 'N'
       ]]>
 </select>
+
+
+	<select id="userList">
+		SELECT * FROM USERS WHERE userName LIKE '%'||#{search_value}||'%'
+	</select>
      
 </mapper>

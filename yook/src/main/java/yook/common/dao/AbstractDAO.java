@@ -84,8 +84,8 @@ public class AbstractDAO {
 		return sqlSession.selectOne(queryId);
 	}
 	
-	public List<Map<String, Object>> cateList(String queryId, Object params) {
-		return sqlSession.selectList(queryId, params);
+	public Object cateList(String queryId) {
+		return sqlSession.selectList(queryId);
 	}
 	
 

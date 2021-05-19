@@ -14,11 +14,14 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
@@ -77,18 +80,39 @@ public class GoodsController {
 	}
 	
 	
-	@RequestMapping(value = "/GoodsListAll.do") // ��ǰ ��ü����
-	public ModelAndView GoodsListAll(CommandMap commandMap) throws Exception {
-
-		ModelAndView mv = new ModelAndView("GoodsListAll");
-
-		List<Map<String, Object>> list = goodsService.GoodsListAll(commandMap.getMap());
-
-		mv.addObject("list", list);
-
-		return mv;
-
-	}
+	  @RequestMapping(value = "/GoodsListAll.do") // ��ǰ ��ü���� public
+	  ModelAndView GoodsListAll(CommandMap commandMap,HttpServletRequest request,
+	            HttpServletResponse response) throws Exception {
+		  
+	  ModelAndView mv = new ModelAndView("GoodsListAll");
+	  
+	  String kind = request.getParameter("kind");
+	  List<Map<String, Object>> list = goodsService.GoodsListAll(commandMap.getMap());
+	  
+	  mv.addObject("list",list);
+	  mv.addObject("kind",kind);
+	  
+	  return mv;
+	  
+	  }
+	 
+	/*
+	@RequestMapping(value ="/GoodsListAll.do")
+    public ModelAndView listAjax(@ModelAttribute("searchVO") CommandMap commandMap,
+            HttpServletRequest request,HttpServletResponse response) throws Exception {
+        
+        String kind = request.getParameter("kind");       //request에서 getParameter를 사용하여 kind 값을 불러옵니다.
+       
+        ModelAndView mv = new ModelAndView("GoodsListAll");      //ajaxList라는 변수에 위에서 선언한 변수들을 모두 담아준 다음
+        List<Map<String, Object>> list = goodsService.selectCateList(commandMap.getMap());
+        
+        mv.addObject("list",list);
+        mv.addObject("kind",kind);
+       
+        return mv;        // return 으로 빼줍니다.
+    }
+*/
+	
 
 	@RequestMapping(value = "/GoodsListPig.do") // ��ǰ ��ü����
 	public ModelAndView GoodsListPig(CommandMap commandMap) throws Exception {
@@ -130,13 +154,14 @@ public class GoodsController {
 
 	}
 
+	
 	/*
 	 * @RequestMapping(value = "/shop/goodsList/{cate}/{orderBy}.do") public
 	 * ModelAndView openGoodsList(@PathVariable String cate, @PathVariable String
 	 * orderBy, CommandMap commandMap,
 	 * 
-	 * @RequestParam(value = "GOODS_CATE", defaultValue = "") String GOODS_CATE,
-	 * HttpServletRequest request) // ī�װ��� ��ǰ����Ʈ throws Exception {
+	 * @RequestParam(value = "GOODS_CATE", defaultValue = "") String
+	 * GOODS_CATE,HttpServletRequest request) // ī�װ��� ��ǰ����Ʈ throws Exception {
 	 * ModelAndView mv = new ModelAndView("goods"); commandMap.put("cate", cate);
 	 * request.setAttribute("GOODS_CATE", GOODS_CATE);
 	 * System.out.println("ī�װ� �˻�Ȯ��=" + commandMap.getMap());
@@ -186,6 +211,7 @@ public class GoodsController {
 	 * 
 	 * return mv; }
 	 */
+	 
 
 	@RequestMapping(value = "/adminGoodsWrite.do") // url public ModelAndView
 	public ModelAndView goodsWriteForm(CommandMap commandMap) throws Exception { // ��ǰ��� ��
@@ -216,10 +242,10 @@ public class GoodsController {
 	public ModelAndView goodsDetail(CommandMap commandMap, HttpServletRequest request) throws Exception { // ��ǰ������
 
 		ModelAndView mv = new ModelAndView("goods_detail");
-		/*
-		 * HttpSession session = request.getSession(); commandMap.put("MEM_NUM",
-		 * ((Map)session.getAttribute("session_MEMBER")).get("MEM_NUM"));
-		 */
+		
+		  HttpSession session = request.getSession(); commandMap.put("MEM_NUM",
+		  ((Map)session.getAttribute("session_MEMBER")).get("MEM_NUM"));
+		 
 
 		Map<String, Object> map = goodsService.selectGoodsDetail(commandMap.getMap(), request);
 		System.out.println("IDX = " + commandMap.getMap());
@@ -375,6 +401,7 @@ public class GoodsController {
 		ModelAndView mv = new ModelAndView("delivery");
 
 		return mv;
-	}
 
+	}
 }
+

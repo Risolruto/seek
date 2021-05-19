@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class JoinController {
+	
+	
 	@Resource(name="joinService")
 	private JoinService joinService;
 	
@@ -40,7 +42,7 @@ public class JoinController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/member/idCheck.do") //占쏙옙占싱듸옙 占쌩븝옙확占쏙옙
+	@RequestMapping(value = "/member/idCheck.do") 
 	   public @ResponseBody String idCheck(CommandMap commandMap) throws Exception {
 	      
 	      System.out.println(commandMap.getMap());
@@ -52,7 +54,7 @@ public class JoinController {
 	      return idCheck;
 	   }
 	
-	@RequestMapping(value="/member/openAgree.do") //�̿��� �����ֱ�
+	@RequestMapping(value="/member/openAgree.do")
 	   public ModelAndView openAgree(CommandMap commandMap)throws Exception{
 	      ModelAndView mv = new ModelAndView("/member/agree");
 	      

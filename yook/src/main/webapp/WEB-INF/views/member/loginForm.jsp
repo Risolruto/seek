@@ -11,7 +11,51 @@
 
 <script type="text/javascript">
 
-	function fsubmit() {
+function submitCheck() {
+    var userId  = $('#MEM_ID' ).val() ;
+    var userPwd = $('#MEM_PW').val() ;
+    $.ajax({
+        type : "POST",
+        url: '/yook/login2.do',
+        data: {userId:userId, userPwd:userPwd},
+        success: function(data){},
+		error: function (request, status, error){}
+    }) ;
+}
+
+
+function fsubmit() {
+		var id = $("#MEM_ID")[0].value;
+		var pw = $("#MEM_PW")[0].value;
+		if (id == null || id == '') {
+			alert("아이디를 입력하세요.");
+			return false;
+		}
+		if (pw == null || pw == '') {
+			alert("비밀번호를 입력하세요.");
+			return false;
+		}
+
+		var data = {
+			id: id,
+			pw : pw
+		};
+
+		$.ajax(
+				{
+				type:"POST",
+				url:"/yook/login2.do",
+				data: JSON.stringify(data),
+				dataType:"json",
+				contentType :"application/json",
+				success: function(data){},
+				error: function (request, status, error){}
+				}
+		)
+	};
+
+
+	 function fsubmit() {
 		var id = $("#MEM_ID")[0].value;
 		var pw = $("#MEM_PW")[0].value;
 		if (id == null || id == '') {
@@ -24,7 +68,7 @@
 		}
 		myform.submit();
 	}
-
+ 
 	$(document).ready(function() {
 		// 저장된 쿠키를 로그인화면에 불러오기위함
 		var userInputId = getCookie("userInputId");
@@ -85,7 +129,7 @@
 
 <title>로그인</title>
 </head>
-<body onload="begin()">
+<body>
 	<form name="myform" action="/yook/login.do" method="post"
 		class="form-signin">
 
@@ -96,7 +140,8 @@
 		</div>
 		<div style="height: 30px; margin-bottom: 10px;"></div>
 
-		<div style="width: 500px; margin-left: auto; margin-right: auto; margin-bottom: 150px;">
+		<div
+			style="width: 500px; margin-left: auto; margin-right: auto; margin-bottom: 150px;">
 			<div>
 				<p style="font-size: 13; color: gray;">
 					가입하신 아이디와 비밀번호를 입력해주세요.<br> 비밀번호는 대소문자를 구분합니다.
@@ -106,14 +151,14 @@
 
 
 			<div class="form-group">
-				<label for="inputId">아이디</label> <input type="text"
-					class="form-control" id="MEM_ID" placeholder="MEMBER ID"
-					name="MEM_ID">
+				<label for="inputId">아이디</label>
+				<input type="text" class="form-control" id="MEM_ID"
+				 placeholder="MEMBER ID" name="MEM_ID">
 			</div>
 			<div class="form-group">
-				<label for="inputPw">비밀번호</label> <input type="password"
-					class="form-control" id="MEM_PW" placeholder="PASSWORD"
-					name="MEM_PW">
+				<label for="inputPw">비밀번호</label>
+				<input type="password" class="form-control" id="MEM_PW" 
+				placeholder="PASSWORD" name="MEM_PW">
 			</div>
 			<div class="form-group form-check">
 				<input type="checkbox" class="form-check-input" id="idSaveCheck">
@@ -123,8 +168,8 @@
 
 
 			<input type="button" class="btn btn-lg btn-primary btn-block"
-				style="margin-left: auto; width: 100%;" value="로그인"
-				onclick="fsubmit();">
+				style="margin-left: auto; width: 100%;" onclick="fsubmit()" value="로그인">
+				
 			<div class="form-group form-check" style="margin-top: 10px;">
 				<div style="float: left;">
 					<span style="margin-left: 30;"><a

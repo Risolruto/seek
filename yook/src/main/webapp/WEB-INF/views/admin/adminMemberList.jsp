@@ -52,6 +52,49 @@
 					               <th scope="col">상태</th>
 					            </tr>   
 					         </thead>
+					         <tbody>
+<%-- 								<c:choose> --%>
+<%-- 								//empty인지 확인하기 위함
+									<c:when test="${fn:length(list) > 0 }">
+ --%>
+ 
+ 										<c:forEach items="${list}" var="row">
+											<tr>
+												  
+												<td align="center">${row.GOODS_NUM}</td>
+												<td>${row.MEM_ID}</td>
+												<td>${row.MEM_NAME}</td>
+												<td>${row.MEM_ADDRESS1}</td>    
+												<td>${row.MEM_PHONE}</td>
+												<td>${row.MEM_DEL_GB}</td>
+											</tr>
+										</c:forEach>
+<%-- 									
+</c:when>
+1.others를 다른 경우에 또 쓸수있다 -> 확장성
+2. else를 일단 지움
+ --%>
+<!--  										0인경우 
+when 을 if로 바꿀수도 있다
+-> choice 안써도됨
+when을 쓰기위해서는 choice를 선언해야만 한다-->
+									
+								<%-- 	<c:if test="${fn:length(list) =0 }">
+										<tr>
+											<td colspan="9">조회된 결과가 없습니다.</td>
+										</tr>
+									</c:if> --%>
+<!-- when은 if문으로 여러번 타면 문제가 발생할수 있음으로
+when은 맞는애를 찾아서 맞는것만 도는데, if문은 조건문을 모두 검색한다. -->
+
+									<c:if test="${empty list}">
+										<tr>
+											<td colspan="9">조회된 결과가 없습니다.</td>
+										</tr>
+									</c:if>									
+<%-- 
+								</c:choose> --%>
+					         
                			</table>
 	               <div id="PAGE_NAVI">
 	                  <input type="hidden" id="PAGE_INDEX" name="PAGE_INDEX" />
@@ -63,92 +106,7 @@
    </div>
    </div>
   </div></div>
-   
-               
-  
-
-
-
-  <script type="text/javascript">
-		$(document).ready(function(){
-			fn_selectBoardList(1);
-			
-			$("a[name='click']").on("click", function(e){
-		          e.preventDefault();
-		          fn_click($(this));
-		           });
-		});
-		function fn_click(obj){
-		     var comSubmit = new ComSubmit();
-		         comSubmit.setUrl("<c:url value='/openAdminMemberDetail.do'/>");
-		         comSubmit.addParam("MEM_NUM", obj.parent().find("#MEM_NUM").val());
-		         comSubmit.submit();
-		   }
-		
-		function fn_openBoardWrite(){
- 			var comSubmit = new ComSubmit();
- 			comSubmit.setUrl("<c:url value='/sample/openBoardWrite.do' />");
- 			comSubmit.submit();
- 		}
-		
- 		function fn_openBoardDetail(obj){
- 			var comSubmit = new ComSubmit();
- 			comSubmit.setUrl("<c:url value='/sample/openBoardDetail.do' />");
- 			comSubmit.addParam("IDX", obj.parent().find("#IDX").val());
- 			comSubmit.submit();
- 		}
-		
-		function fn_selectBoardList(pageNo){
-			var comAjax = new ComAjax();
-			comAjax.setUrl("<c:url value='/adminSelectMemberList.do' />");
-			comAjax.setCallback("fn_selectBoardListCallback");
-			comAjax.addParam("PAGE_INDEX", $("#PAGE_INDEX").val());
-			comAjax.addParam("PAGE_ROW", 15);
-			comAjax.ajax();
-		}
-		
-		function fn_selectBoardListCallback(data){
-			var total = data.TOTAL;
-			var body = $("table>tbody");
-			body.empty();
-			if(total == 0){
-				var str = "<tr>" + 
-								"<td colspan='7'>조회된 결과가 없습니다.</td>" + 
-							"</tr>";
-				body.append(str);
-			}
-			else{
-				var params = {
-					divId : "PAGE_NAVI",
-					pageIndex : "PAGE_INDEX",
-					totalCount : total,
-					eventName : "fn_selectBoardList"
-				};
-				gfn_renderPaging(params);
-				
-				var str = "";
-				$.each(data.list, function(key, value){
-					str += "<tr>" + 
-								"<td>" + value.MEM_ID + "</td>" + 
-								"<td>" + value.MEM_NAME + "</td>" +
-								"<td>" + value.MEM_ADDRESS1 + value.MEM_ADDRESS2 + "</td>" +
-								"<td>" + value.MEM_EMAIL + "</td>" +
-								"<td>" + value.MEM_PHONE + "</td>" +
-								"<td>" + value.MEM_JOINDATE + "</td>" + 
-								"</td>" 
-				                  + "<td>" 
-				                  + "<a href='#this' name='click'>"
-				                  + value.MEM_DEL_GB
-				                  + "<input type='hidden' id='MEM_NUM' name='MEM_NUM' value=" + value.MEM_NUM + ">"
-				                  + "</a>"
-				                  + "</td>" 
-				                  + 
-							"</tr>";
-				});
-				body.append(str);
-			}
-		}
-	</script>	
+	
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script

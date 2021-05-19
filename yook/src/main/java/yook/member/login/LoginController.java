@@ -14,6 +14,10 @@ import org.apache.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +38,8 @@ public class LoginController {
 	@Resource(name="mailService")
 	private MailService mailService;
 	
+	
+	
 	@Inject
 	private JavaMailSender mailSender;
 
@@ -49,14 +55,14 @@ public class LoginController {
 	 * return "main"; }
 	 */
 
-	@RequestMapping(value = "/LoginForm.do") // loginForm.jsp
+	@RequestMapping(value = "/LoginForm.do") // loginForm.jsp, post랑 get 선언 안되어있으면 get이 default
 	public ModelAndView loginForm(HttpServletRequest request) throws Exception {
 		//session
 		HttpSession session = request.getSession();
 		
-		System.out.println("session : " + session.getAttribute("session_MEMBER"));
+		System.out.println("session : " + session.getAttribute("session_MEM_ID"));
 		
-		if(session.getAttribute("session_MEMBER")!=null) {
+		if(session.getAttribute("session_MEM_ID")!=null) {
 			ModelAndView mv = new ModelAndView();
 			mv.setViewName("redirect:/main.do"); 
 			return mv;
@@ -65,8 +71,8 @@ public class LoginController {
 			return mv;
 		}
 	}
-
-	@RequestMapping(value = "/login.do", method = {RequestMethod.GET, RequestMethod.POST})
+	
+	@PostMapping("/login.do")
 	public ModelAndView login(CommandMap commandMap, HttpServletRequest request) throws Exception {
 		ModelAndView mv = new ModelAndView("login");
 		String message = "";
@@ -74,6 +80,7 @@ public class LoginController {
 
 		HttpSession session = request.getSession();
 
+		
 		//아이디 확인문
 		Map<String, Object> chk = loginService.login(commandMap.getMap());
 		if (chk==null) { // 아이디가 있는지 없는지를 확인
@@ -81,8 +88,8 @@ public class LoginController {
 		} else {
 			if (chk.get("MEM_PW").equals(commandMap.get("MEM_PW"))) {
 				session.setAttribute("session_MEM_ID", commandMap.get("MEM_ID"));
-				session.setAttribute("session_MEM_NUM", commandMap.get("MEM_NUM"));
-				session.setAttribute("session_MEMBER", chk);
+			//	session.setAttribute("session_MEM_NUM", commandMap.get("MEM_NUM"));
+				//session.setAttribute("session_MEMBER", chk);//일허게 만들면 commandMap에다가 MEM_PW,ID,NUM을 다 넣고 MEMBER로 비교하는건데 필요없다.
 				
 			} else { // if문을 통해 sql과 정보 일치 확인
 				message = "비밀번호가 맞지 않습니다.";
@@ -124,8 +131,8 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/member/openFindIdResult.do", method = {RequestMethod.GET, RequestMethod.POST}, produces = "application/text; charset=utf8")
-
-	public @ResponseBody String findIdResult(CommandMap commandMap) throws Exception {
+	@ResponseBody
+	public  String findIdResult(CommandMap commandMap) throws Exception {
 		String id = String.valueOf(loginService.findId(commandMap.getMap()));
 		
 		if(id.equals("1")) {

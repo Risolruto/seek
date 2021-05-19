@@ -113,4 +113,8 @@ public class GoodsDao extends AbstractDAO {
 		return (List<Map<String, Object>>) selectList("goods.selectBasketNo", map);
 	}
 
+	public Object cateList() throws Exception{
+		return selectList("goods.selectCateList");
+	}
+
 }

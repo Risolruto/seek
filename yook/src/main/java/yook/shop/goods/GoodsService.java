@@ -41,4 +41,7 @@ public interface GoodsService {
 	void gumeListDelete(Map<String, Object> map) throws Exception; // ���Ÿ���Ʈ �ʱ�ȭ
 	
 	List<Map<String, Object>> selectBasketNo(Map<String, Object> map) throws Exception; // �����Ҷ� �������� ��������
+
+	public Object cateList() throws Exception;
+	
 }

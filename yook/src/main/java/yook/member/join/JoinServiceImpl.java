@@ -21,15 +21,17 @@ Logger log=Logger.getLogger(this.getClass());
 	public List<Map<String, Object>> selectJoinList(Map<String, Object> map)throws Exception{
 			return joinDAO.selectJoinList(map);
 	}
-	
-	@Override
-	public void insertJoin(Map<String, Object> map) throws Exception{
-		joinDAO.insertJoin(map);		
-	}
 
 	@Override
 	public int selectIdCheck(Map<String, Object> map) throws Exception {
 		return joinDAO.selectIdCheck(map);
 	}
+
+	@Override
+	public void insertJoin(Map<String, Object> map) throws Exception {
+		joinDAO.insertJoin(map);
+		
+	}
+
 
 }

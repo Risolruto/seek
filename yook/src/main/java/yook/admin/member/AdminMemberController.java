@@ -30,6 +30,15 @@ public class AdminMemberController {
    @RequestMapping(value="/adminMemberList.do")
    public ModelAndView openAdminMemberList(CommandMap commandMap)throws Exception{
       ModelAndView mv = new ModelAndView("adminMemberList");
+      List<Map<String, Object>> list = adminMemberService.selectMemberList(commandMap.getMap());
+      mv.addObject("list", list);
+      System.out.println("list"+list);
+      if(list.size() >0) {
+         mv.addObject("TOTAL", list.get(0).get("TOTAL_COUNT"));
+      }
+      else {
+         mv.addObject("TOTAL", 0);
+      }
       return mv;
    }
    

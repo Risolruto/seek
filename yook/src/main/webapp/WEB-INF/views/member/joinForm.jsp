@@ -26,14 +26,12 @@
 	});
 
 	function fn_idCheck() { //id check
-		if (!$("#MEM_ID").val()) {
+		if (!$("#MEM_ID").val()) { //id값
 			alert("아이디를 입력하세요");
 			$("#MEM_ID").focus();
 			return false;
 		}
-		var MEM_ID = {
-			MEM_ID : $('#MEM_ID').val()
-		};
+		var MEM_ID = {MEM_ID : $('#MEM_ID').val()}; //input에 입력되는 값, 컨트롤에 넘길 데이터 이름
 
 		$.ajax({
 			url : "<c:url value='/member/idCheck.do'/>",
@@ -138,8 +136,8 @@
 				<td style="width: 300px;"><input type="text" id="MEM_ID"
 					name="MEM_ID" size="15" maxlength="12" class="form-control"
 					placeholder="아이디" style="width: 100%;"></td>
-				<td style="width: 100px;"><input type="button" name="idCheck"
-					value="ID 중복확인" class="btn btn-outline-primary mb-2"
+				<td style="width: 100px;">
+				<input type="button" name="idCheck" value="ID 중복확인" class="btn btn-outline-primary mb-2"
 					OnClick="fn_idCheck()" style="width: 100%;"></td>
 			</tr>
 

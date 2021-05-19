@@ -187,4 +187,11 @@ public class GoodsServiceImpl implements GoodsService {
 		return goodsDao.selectBasketNo(map);
 	}
 
+	@Override
+	public Object cateList() throws Exception {
+		return goodsDao.cateList();
+	}
+
+	
+
 }

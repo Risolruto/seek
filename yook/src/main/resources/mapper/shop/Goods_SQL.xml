@@ -24,7 +24,7 @@
       ]]>
    </select>
    
-   <select id="selectCateList" parameterType="hashmap" resultType="hashmap"> 
+   <!-- <select id="selectCateList" parameterType="hashmap" resultType="hashmap"> 
       <![CDATA[
       SELECT
             G.GOODS_NUM, 
@@ -46,7 +46,7 @@
             GOODS_NUM ASC
              
       ]]>
-   </select>
+   </select> -->
    
    
       
@@ -129,8 +129,9 @@
       ]]>
    </select>
 	
-	
-	<!-- <select id="selectCateList" parameterType="hashmap" resultType="hashmap"> 상품 카테고리별 리스트 
+    
+	<select id="selectCateList" parameterType="hashmap" resultType="hashmap"> 
+		  <![CDATA[
 		SELECT 	AAA.*
 			FROM	(
 						SELECT 	COUNT(*) OVER() AS TOTAL_COUNT,
@@ -146,18 +147,15 @@
 				GOODS_COUNT,
 				GOODS_IMAGE
 			from GOODS
-			where GOODS_CATE = #{cate}
-			   <if test="GOODS_CATE != NULL">
-		   	 AND (GOODS_CATE LIKE '%' || #{GOODS_CATE} || '%' )
-		   </if>
-           <if test="orderBy != '' and orderBy != 'null'">
-		     ORDER BY ${orderBy} ${orderSort}
+			where GOODS_CATE = #{kind}
+		  <if test="GOODS_CATE != NULL">
+		   	 AND (GOODS_CATE LIKE '%' || #{kind} || '%' )
 		   </if>
 		) AA
 					) AAA
 			WHERE 	AAA.NUM BETWEEN #{START} AND #{END}
-		   
-	</select> -->
+		     ]]>
+	</select>
 	
 		<insert id="goodsInsert" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX"> <!-- 상품 등록 -->
 		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">

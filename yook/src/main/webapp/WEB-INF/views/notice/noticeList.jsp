@@ -14,96 +14,69 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 <script src="<c:url value='/js/common.js'/>" charset="utf-8"></script>
 
+<script type="text/javascript">
+$(document).ready(function(){
+		$.each(boardlist, function(index, item){
+			var newobject = 
+			 "<tr><td><a href='board_ajax.jsp'>" + item.title +"</a></td><td>"
+			 + item.writer + "</td><td>" 
+			 + item.viewcount + "</td></tr>";
+			 $('table').append(newobject);
+		});//each end
+	
+		$('a').on('click',function(e){
+			e.preventDefault();
+			requestAjax($(this).text());
+		}) //click end
+	});  //ready end
 
+</script>
+<script>
+function requestAjax(title){
+		$.ajax({
+			url : 'board_ajax.jsp',
+			type : 'POST',
+			data : {'title': title, 'contents': title + " 수업시간입니다.", 'password' : "1111"},
+			dataType : 'text',
+			success : function(server_result){	//json-텍스트->텍스트-json  stringify
+				var jsonobj = JSON.parse(server_result);
+				$("#result").text("title : " + jsonobj.title + " contents : " + jsonobj.contents 
+						+ " password : " + jsonobj.password);								
+			},
+			error : function(err){alert(err);},
+			complete : function(){alert("실행완료!")}
+		});
+	}//requestAjax
+</script>
 <title>공지사항</title>
 </head>
 
-<div id="layoutSidenav_content">
-	<div class="container">
-		<div style="height: 100px;"></div>
-		<div align="center">
-			<h3>공지사항</h3>
-		</div>
-		<div style="height: 30px;"></div>
+<body>
 
+	<table>
+		<tr>
+			<td>제목</td>
+			<td>작성자</td>
+			<td>조회수</td>
+		</tr>
+	</table>
+	<div id="result"></div>
 
-		<div align="center"
-			style="width: 100%; margin-left: auto; margin-right: auto;">
-			<div class="container" style="margin-top: 20px;">
-
-				<table align="center" class="table table-hover"
-					style="cellpadding: 7px;">
-					<thead>
-						<tr style="background-color: #EAEAEA;">
-
-							<th style="width: 40%">제목</th>
-
-							<th style="width: 20%">작성일</th>
-
-						</tr>
-					</thead>
-					<form id="frm" name="frm">
-						<tbody>
-							<c:choose>
-								<c:when test="${fn:length(list) > 0 }">
-									<c:forEach items="${list}" var="row">
-										<tr>
-
-
-											<td><a href="#this" name="title">${row.NOTICE_TITLE}</a>
-												<input type="hidden" id="NOTICE_NUM"
-												value="${row.NOTICE_NUM}"></td>
-
-
-											<td><fmt:formatDate pattern="yyyy/MM/dd"
-													value="${row.NOTICE_DATE}" /></td>
-
-										</tr>
-									</c:forEach>
-								</c:when>
-
-								<c:otherwise>
-									<tr>
-										<td colspan="6">조회된 결과가 없습니다.</td>
-									</tr>
-								</c:otherwise>
-
-							</c:choose>
-						</tbody>
-						<hr>
-						<div align="right">
-
-							<!-- <button type="button" class="btn btn-primary btn-sm" onclick="javascript:window.location='/yook/adminNoticeWrite.do'">글 작성</button> -->
-
-
-						</div>
-				</table>
-			</div>
-		</div>
-	</div>
-	<br />
-</div>
-</main>
-</div>
-</form>
-<div style="height: 80px;"></div>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("a[name='title']").on("click", function(e) {
-			e.preventDefault();
-			fn_openBoardDetail($(this));
-		});
-	});
-
-	function fn_openBoardDetail(obj) {
-		var comSubmit = new ComSubmit("frm");
-		comSubmit.setUrl("<c:url value='/noticeDetail.do'/>");
-		comSubmit
-				.addParam("NOTICE_NUM", obj.parent().find("#NOTICE_NUM").val());
-		comSubmit.submit();
-	}
-</script>
+	<script src="/thirdproject/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript">
+		var boardlist = [
+		  {title:'게시물시작' , writer : 'java', viewcount : 100},
+		  {title:'게시물2' , writer : 'sql', viewcount : 70},
+		  {title:'게시물3' , writer : 'admin', viewcount : 1},
+		  {title:'게시물4' , writer : 'bit', viewcount : 10},
+		  {title:'게시물5' , writer : 'java', viewcount : 55},
+		  {title:'게시물6' , writer : 'html', viewcount : 29},
+		  {title:'게시물7' , writer : 'java', viewcount : 1},
+		  {title:'게시물8' , writer : 'java', viewcount : 1},
+		  {title:'게시물9' , writer : 'java', viewcount : 6},
+		  {title:'게시물10' , writer : 'java', viewcount : 0}
+		  ];
+[출처] [AJAX] 1-1. ajax/json값 전달 실습.|작성자 mongniiii
 
 
 </body>

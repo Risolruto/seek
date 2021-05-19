@@ -17,30 +17,34 @@
 <title>상품보기</title>
 
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-<script>	
-    $(function(){
-    	$("button").on('click',function(){
-    			var kind = $(this).val();  //버튼이 클릭 되었을 때 그 버튼의 value를 var kind로 가져와서	
-    			$.ajax({
-    				 url : './bbs_kind.nhn', // 이 주소로 
-    	              type : "post", // 포스트 방식으로 보내는데
-    	              cache: false,
-    	              headers: {"cache-control":"no-cache", "pragma": "no-cache"},
-    	              data : {"kind" : kind}, // kind를 kind로 명명하여 보내겠다
-    	              success : function(data){ 
-    	                 console.log(data);
-    	                
-    	                 $('body').html(data); //성공할시에 body부분에 data라는 html문장들을 다 적용시키겠다
-    	              },
-    	              error : function(data){
-    	            	 alert('error');
-    	               
-    	              }//error
-    			})//ajax
-    		});//click
-    });//ready
-	</script>
 
+<script type="text/javascript">
+
+$(function(){
+    
+    $("#button").on('click',function(){
+        var kind = $(this).val();       //버튼이 클릭 되었을 시, 개별 버튼의 값이 kind 변수에 담겨집니다.
+        $.ajax({
+            url : "/GoodsListAll.do",
+            type : "GET",
+            cache : false,
+            headers : {"cache-control":"no-cache","pragma":"no-cache"},
+            data : {
+                "kind":kind    // 버튼의 value값에 따라 작동합니다.
+                },
+            success : function(data){
+                console.log(data);
+                $('body').html(data); // 성공 시, body부분에 data라는 html 문장들을 다 적용시킵니다.
+            },
+            error : function(data){
+                alert('error');
+            }//error
+        })//ajax
+    });//button click
+    
+}); 
+ 
+</script>
 
 </head>
 
@@ -94,36 +98,37 @@
 		<div align="center" class="btn-group-center mt-3 mb-5" role="group"
          aria-label="Basic example">
          
-         
+       <%--   
          <a href="${contextPath}/yook/GoodsListAll.do"><button type="button" class="btn btn-secondary">전체보기</button></a>
          <a href="${contextPath}/yook/GoodsListPig.do"><button type="button" class="btn btn-secondary">돼지고기</button></a>
          <a href="${contextPath}/yook/GoodsListCow.do"><button type="button" class="btn btn-secondary">소고기</button></a>
          <a href="${contextPath}/yook/GoodsListChicken.do"><button type="button" class="btn btn-secondary">닭고기</button></a>
+        --%>  
+         <input type="button" id="button" name="button" value="전체보기" class="btn btn btn-primary btn-bg"/>
+         <input type="button" id="button" name="button" value="돼지고기" class="btn btn btn-primary btn-bg"/>
+         <input type="button" id="button" name="button" value="소고기" class="btn btn btn-primary btn-bg"/>
+         <input type="button" id="button" name="button" value="닭고기" class="btn btn btn-primary btn-bg"/>
+                
       </div>
-		<div id="main-container" style="margin-left:240px; margin-right:200px;">
-		<div class="row">
+	
+	<div id="main-container" style="margin-left:240px; margin-right:200px;">
+	<div class="row">
 
-		
-<table class="GOODS_LIST" style="width:'100%';" > 
+	<table class="GOODS_LIST" style="width:'100%';" > 
       <colgroup>
          <col width="60%" />
       </colgroup>
-      <thead>
-         <tr>
-         </tr>
-      </thead>
+      
       <tbody>
-      <form id="frm" name="frm">
+      <form:form commandName="searchVO" method="get"  id="frm" name="frm" action="${path}/yook/GoodsListAll.do">
+    
       <c:forEach items="${list}" var="list">
          
-         <div >   
-         	
-            <a href="#this" name="title" style="text-decoration: none; ">
+         <div>
+            <a href="#this" name="title" style="text-decoration: none; "></a>
             
             <c:set var="IMG" value="${fn:split(list.GOODS_IMAGE,',')}"/>
-                
-             
-             <div class="card mb-4" style="margin-left:20px; border: none; color:black; background-color:whitesmoke; width:330px;">
+              <div class="card mb-4" style="margin-left:20px; border: none; color:black; background-color:whitesmoke; width:330px;">
                      <img src="/yook/img/goods_upload/${IMG[0]}" width="330" height="330" style="margin-bottom: 5%; margin-left: 1px; margin-top: 15px;"> 
             
                         <input type="hidden" id="GOODS_NUM" name="GOODS_NUM" value="${list.GOODS_NUM}" />
@@ -132,29 +137,24 @@
                         <font class="font3" style="margin-left: 9px; margin-bottom: 15px; color:gray;"><fmt:formatNumber value="${list.GOODS_PRICE}"  pattern="#,###"> </fmt:formatNumber>원/${list.GOODS_WEIGHT }
                         <br/>
                         <c:if test="${list.GOODS_WEIGHT == '300g(14mm)' }">
-							(100g당 ${list.GOODS_PRICE / 3}원)
-							</c:if>
-							<c:if test="${list.GOODS_WEIGHT == '300g(16mm)' }">
-							(100g당 ${list.GOODS_PRICE / 3}원)
-							</c:if>
-							<c:if test="${list.GOODS_WEIGHT == '300g(18mm)' }">
-							(100g당 ${list.GOODS_PRICE / 3}원)
-							</c:if>
-							<c:if test="${list.GOODS_WEIGHT == '300g' }">
-							(100g당 ${list.GOODS_PRICE / 3}원)
-							</c:if>
-							<c:if test="${list.GOODS_WEIGHT == '200g' }">
-							(100g당 ${list.GOODS_PRICE / 2}원)
-							</c:if>
-							<c:if test="${list.GOODS_WEIGHT == '150g' }">
-							(100g당 ${list.GOODS_PRICE / 1.5}원)
-							</c:if> </font> 		
+							(100g당 ${list.GOODS_PRICE / 3}원)</c:if>
+						<c:if test="${list.GOODS_WEIGHT == '300g(16mm)' }">
+							(100g당 ${list.GOODS_PRICE / 3}원)</c:if>
+						<c:if test="${list.GOODS_WEIGHT == '300g(18mm)' }">
+							(100g당 ${list.GOODS_PRICE / 3}원)</c:if>
+						<c:if test="${list.GOODS_WEIGHT == '300g' }">
+							(100g당 ${list.GOODS_PRICE / 3}원)</c:if>
+						<c:if test="${list.GOODS_WEIGHT == '200g' }">
+							(100g당 ${list.GOODS_PRICE / 2}원)</c:if>
+						<c:if test="${list.GOODS_WEIGHT == '150g' }">
+							(100g당 ${list.GOODS_PRICE / 1.5}원)</c:if> 
+						</font> 		
 			</div>
-         </a>
-         
          </div>
       </c:forEach>
-      </form>
+	      <c:if test="${fn:length(resultList) == 0}">
+	           조회결과가 없습니다. </c:if>
+      </form:form>
       </tbody>
       </table>
       </div>
@@ -194,7 +194,7 @@ function fn_openBoardDetail(obj) {
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	
-	 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
