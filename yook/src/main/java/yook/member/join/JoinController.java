@@ -1,25 +1,21 @@
 package yook.member.join;
 
-import yook.common.map.CommandMap;
+import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import yook.member.join.JoinService;
-
-import java.util.Locale;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import yook.common.map.CommandMap;
 
 @Controller
 public class JoinController {
 	
+	@Autowired
+    private BCryptPasswordEncoder pwEncoder;
 	
 	@Resource(name="joinService")
 	private JoinService joinService;
@@ -37,7 +33,15 @@ public class JoinController {
 	@RequestMapping(value="/member/insertJoin.do")
 	public ModelAndView insertJoin(CommandMap commandMap) throws Exception{
 		ModelAndView mv = new ModelAndView("redirect:/LoginForm.do");
+		
+
+		String pw = commandMap.getMap().get("MEM_PW").toString();
+		String encryptPassword = pwEncoder.encode(pw);
+		
+		commandMap.getMap().put("MEM_PW", encryptPassword);
+		
 		joinService.insertJoin(commandMap.getMap());
+		
 		
 		return mv;
 	}

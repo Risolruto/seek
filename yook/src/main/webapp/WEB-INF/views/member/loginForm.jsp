@@ -8,23 +8,67 @@
 
 <link href="<c:url value="/resources/css/btn.css"/>" rel="stylesheet">
 
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script>
+	// SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해 주세요.
+	Kakao.init('11d68dabab9b624fa25bf0976559158f');
+	console.log(Kakao.isInitialized()); // sdk초기화여부판단
+
+	//카카오로그인
+	function kakaoLogin() {
+		Kakao.Auth.login({
+			success : function(response) {
+				Kakao.API.request({
+					url : '/v2/user/me',
+					success : function(response) {
+						console.log(response)
+					},
+					fail : function(error) {
+						console.log(error)
+					},
+				})
+			},
+			fail : function(error) {
+				console.log(error)
+			},
+		})
+	}
+	//카카오로그아웃  
+	function kakaoLogout() {
+		if (Kakao.Auth.getAccessToken()) {
+			Kakao.API.request({
+				url : '/v1/user/unlink',
+				success : function(response) {
+					console.log(response)
+				},
+				fail : function(error) {
+					console.log(error)
+				},
+			})
+			Kakao.Auth.setAccessToken(undefined)
+		}
+	}
+</script>
 
 <script type="text/javascript">
+	function submitCheck() {
+		var userId = $('#MEM_ID').val();
+		var userPwd = $('#MEM_PW').val();
+		$.ajax({
+			type : "POST",
+			url : '/yook/login2.do',
+			data : {
+				userId : userId,
+				userPwd : userPwd
+			},
+			success : function(data) {
+			},
+			error : function(request, status, error) {
+			}
+		});
+	}
 
-function submitCheck() {
-    var userId  = $('#MEM_ID' ).val() ;
-    var userPwd = $('#MEM_PW').val() ;
-    $.ajax({
-        type : "POST",
-        url: '/yook/login2.do',
-        data: {userId:userId, userPwd:userPwd},
-        success: function(data){},
-		error: function (request, status, error){}
-    }) ;
-}
-
-
-function fsubmit() {
+	function fsubmit() {
 		var id = $("#MEM_ID")[0].value;
 		var pw = $("#MEM_PW")[0].value;
 		if (id == null || id == '') {
@@ -37,25 +81,24 @@ function fsubmit() {
 		}
 
 		var data = {
-			id: id,
+			id : id,
 			pw : pw
 		};
 
-		$.ajax(
-				{
-				type:"POST",
-				url:"/yook/login2.do",
-				data: JSON.stringify(data),
-				dataType:"json",
-				contentType :"application/json",
-				success: function(data){},
-				error: function (request, status, error){}
-				}
-		)
+		$.ajax({
+			type : "POST",
+			url : "/yook/login2.do",
+			data : JSON.stringify(data),
+			dataType : "json",
+			contentType : "application/json",
+			success : function(data) {
+			},
+			error : function(request, status, error) {
+			}
+		})
 	};
 
-
-	 function fsubmit() {
+	function fsubmit() {
 		var id = $("#MEM_ID")[0].value;
 		var pw = $("#MEM_PW")[0].value;
 		if (id == null || id == '') {
@@ -68,7 +111,7 @@ function fsubmit() {
 		}
 		myform.submit();
 	}
- 
+
 	$(document).ready(function() {
 		// 저장된 쿠키를 로그인화면에 불러오기위함
 		var userInputId = getCookie("userInputId");
@@ -151,14 +194,14 @@ function fsubmit() {
 
 
 			<div class="form-group">
-				<label for="inputId">아이디</label>
-				<input type="text" class="form-control" id="MEM_ID"
-				 placeholder="MEMBER ID" name="MEM_ID">
+				<label for="inputId">아이디</label> <input type="text"
+					class="form-control" id="MEM_ID" placeholder="MEMBER ID"
+					name="MEM_ID">
 			</div>
 			<div class="form-group">
-				<label for="inputPw">비밀번호</label>
-				<input type="password" class="form-control" id="MEM_PW" 
-				placeholder="PASSWORD" name="MEM_PW">
+				<label for="inputPw">비밀번호</label> <input type="password"
+					class="form-control" id="MEM_PW" placeholder="PASSWORD"
+					name="MEM_PW">
 			</div>
 			<div class="form-group form-check">
 				<input type="checkbox" class="form-check-input" id="idSaveCheck">
@@ -168,8 +211,17 @@ function fsubmit() {
 
 
 			<input type="button" class="btn btn-lg btn-primary btn-block"
-				style="margin-left: auto; width: 100%;" onclick="fsubmit()" value="로그인">
-				
+				style="margin-left: auto; width: 100%;" onclick="fsubmit()"
+				value="로그인">
+			<ul>
+				<li onclick="kakaoLogin();"><a href="javascript:void(0)"  style="float:right;">
+					<img src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png" style="width:250px; margin-top:10px; margin-left:5px;"/>
+				</a></li>
+				<!-- <li onclick="kakaoLogout();"><a href="javascript:void(0)">
+						<span>카카오 로그아웃</span>
+				</a></li> -->
+			</ul>
+
 			<div class="form-group form-check" style="margin-top: 10px;">
 				<div style="float: left;">
 					<span style="margin-left: 30;"><a

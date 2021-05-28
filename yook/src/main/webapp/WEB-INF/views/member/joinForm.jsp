@@ -31,10 +31,10 @@
 			$("#MEM_ID").focus();
 			return false;
 		}
-		var MEM_ID = {MEM_ID : $('#MEM_ID').val()}; //input에 입력되는 값, 컨트롤에 넘길 데이터 이름
+		var MEM_ID = {MEM_ID : $('#MEM_ID').val()}; 
 
 		$.ajax({
-			url : "<c:url value='/member/idCheck.do'/>",
+			url : "<c:url value='/member/idCheck.do'/>", //url을 생성해주는 기능이며 contextPath를 자동으로 붙여주며 url을 생성하기 때문에 경로가 변경되도 url을 수정할필요가 없다
 			type : 'get',
 			data : MEM_ID,
 			success : function(data) {
@@ -42,7 +42,7 @@
 					alert("사용가능한 아이디입니다.");
 				} else {
 					alert("중복된 아이디입니다.");
-					$('#MEM_ID').val('');
+					$('#MEM_ID').val(''); //val()메서드는 선택한 요소의, 속성 값을 가져오고, val("속성")-속성 값을 변경, val("함수") 함수를 설정
 					$('#MEM_ID').focus();
 				}
 			},

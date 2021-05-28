@@ -1,7 +1,6 @@
 package yook.member.login;
 
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -11,22 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import yook.member.login.MailService;
 import yook.common.map.CommandMap;
-import yook.member.login.LoginService;
+import yook.member.join.JoinService;
 
 
 
@@ -38,7 +34,8 @@ public class LoginController {
 	@Resource(name="mailService")
 	private MailService mailService;
 	
-	
+	@Autowired
+    private BCryptPasswordEncoder pwEncoder;
 	
 	@Inject
 	private JavaMailSender mailSender;
@@ -46,6 +43,8 @@ public class LoginController {
 	@Resource(name = "loginService")
 	private LoginService loginService;
 	
+	@Autowired
+	private JoinService joinService;
 	
 	
 	/*
@@ -77,10 +76,11 @@ public class LoginController {
 		ModelAndView mv = new ModelAndView("login");
 		String message = "";
 		String url = "";
-
+		String pw = commandMap.getMap().get("MEM_PW").toString();
+		String encryptPassword = pwEncoder.encode(pw);
+		
 		HttpSession session = request.getSession();
 
-		
 		//아이디 확인문
 		Map<String, Object> chk = loginService.login(commandMap.getMap());
 		if (chk==null) { // 아이디가 있는지 없는지를 확인
@@ -88,17 +88,19 @@ public class LoginController {
 		} else {
 			if (chk.get("MEM_PW").equals(commandMap.get("MEM_PW"))) {
 				session.setAttribute("session_MEM_ID", commandMap.get("MEM_ID"));
-			//	session.setAttribute("session_MEM_NUM", commandMap.get("MEM_NUM"));
-				//session.setAttribute("session_MEMBER", chk);//일허게 만들면 commandMap에다가 MEM_PW,ID,NUM을 다 넣고 MEMBER로 비교하는건데 필요없다.
-				
-			} else { // if문을 통해 sql과 정보 일치 확인
+				session.setAttribute("session_MEM_NUM", commandMap.get("MEM_NUM"));
+				session.setAttribute("session_MEMBER", chk);//일허게 만들면 commandMap에다가 MEM_PW,ID,NUM을 다 넣고 MEMBER로 비교하는건데 필요없다.
+			} else if(pwEncoder.matches(pw, encryptPassword)) {
+			  session.setAttribute("session_MEM_ID", commandMap.get("MEM_ID"));
+			} else {
 				message = "비밀번호가 맞지 않습니다.";
 			}
-		}
+			
 		System.out.println(chk);
 		mv.addObject("message",message);
 		mv.addObject("url",url);
-		 
+		
+		}
 		return mv;
 	}
 	

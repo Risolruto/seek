@@ -21,7 +21,7 @@ import yook.shop.order.OrderService;
 @Controller
 public class OrderController {
 	
-	Logger log = Logger.getLogger(this.getClass()); //�α�
+	Logger log = Logger.getLogger(this.getClass()); //로그
 	/*
 	 * @Resource(name="orderService") private OrderService orderService;
 	 */
@@ -33,12 +33,12 @@ public class OrderController {
 	@Resource(name="orderService")
 	private OrderService orderService;
 	
-	//��ٱ��� ��α���
+	//장바구니 모두구매
 		@RequestMapping(value="/basketAllOrderWrite.do")
 		public ModelAndView basketAllOrderSelect(CommandMap commandMap, HttpServletRequest request) throws Exception {
 			
 			ModelAndView mv = new ModelAndView("orderForm");
-			Object MEM_NUM = ""; //���ǰ� �������� 
+			Object MEM_NUM = ""; //세션값 가져오기 
 			HttpSession session = request.getSession(); 
 			commandMap.put("MEM_NUM", ((Map)session.getAttribute("session_MEMBER")).get("MEM_NUM"));
 			
@@ -53,14 +53,14 @@ public class OrderController {
 			return mv;
 		}
 		
-		//��ǰ �ֹ��Ϸ�(����)
+		//상품 주문완료(결제)
 		@RequestMapping(value="/orderPay.do")
 		public ModelAndView orderPay(CommandMap commandMap, HttpServletRequest request) throws Exception {
 			
 			ModelAndView mv = new ModelAndView("orderCompleted");
 			
-			System.out.println("����");
-			Object MEM_NUM = ""; //���ǰ� �������� 
+			System.out.println("들어옴");
+			Object MEM_NUM = ""; //세션값 가져오기 
 			HttpSession session = request.getSession(); 
 			commandMap.put("MEM_NUM", ((Map)session.getAttribute("session_MEMBER")).get("MEM_NUM"));
 			//commandMap.put("ORDER_PRICE", Integer.parseInt((String)commandMap.get("ORDER_cost")));
@@ -92,17 +92,17 @@ public class OrderController {
 			return mv;
 			}
 		
-		//��ٱ��� ���û�ǰ ����
+		//장바구니 선택상품 구매
 	      @RequestMapping(value="/basketSelectOrder.do")
 	      public ModelAndView basketSelect(CommandMap commandMap, HttpServletRequest request) throws Exception {
 	         
 	         ModelAndView mv = new ModelAndView("orderForm");
-	         Object MEM_NUM = ""; //���ǰ� �������� 
+	         Object MEM_NUM = ""; //세션값 가져오기 
 	         HttpSession session = request.getSession(); 
 	         MEM_NUM = (Object)session.getAttribute("session_MEMBER"); 
 	         commandMap.put("MEM_NUM", ((Map)session.getAttribute("session_MEMBER")).get("MEM_NUM"));
-	         List<Map<String,Object>> list = basketService.basketSelectList(commandMap, request); //������ ��ٱ��Ϲ�ȣ�� ��ǰ 
-	         Map<String,Object> map = orderService.orderMemberInfo(commandMap, request); //�ֹ�������
+	         List<Map<String,Object>> list = basketService.basketSelectList(commandMap, request); //선택한 장바구니번호의 상품 
+	         Map<String,Object> map = orderService.orderMemberInfo(commandMap, request); //주문자정보
 
 	         mv.addObject("list", list);
 	         mv.addObject("map", map);
