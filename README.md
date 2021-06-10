@@ -1,9 +1,9 @@
 # 식육증가_WebProject
----
 
 ### 개발 환경
 * front - Jsp, Javascript, BootStrap
 * back - STS4 Spring, Oracle Developer
+* group project (6pp)
 ---
 #### 개요 : 다양한 소비 형태에 맞는 차별화된 상품인 육류를 취급하고 고객 편의에 맞춘 쇼핑 서비스를 제공하는 웹페이지
 ---
