@@ -20,6 +20,10 @@
 
 <img src="https://user-images.githubusercontent.com/70188667/121499023-f47fb200-ca17-11eb-8b4c-8948be363235.png" width="30%"> <img src="https://user-images.githubusercontent.com/70188667/121498799-be423280-ca17-11eb-9ce3-8f0205e34f88.png" height="10%" width="30%">
 
+* 마이페이지
+  * 주문내역 확인
+<img src="https://user-images.githubusercontent.com/70188667/121501924-a28c5b80-ca1a-11eb-94cb-a3e2a70e4d88.png" width="40%">
+
 * 상품
 
 <img src="https://user-images.githubusercontent.com/70188667/121499295-37da2080-ca18-11eb-9d15-82a4cda12c8c.png" width="35%" height="100%">
