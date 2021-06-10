@@ -46,4 +46,6 @@
 <img src="https://user-images.githubusercontent.com/70188667/121500525-58ef4100-ca19-11eb-8302-3fbfd760f08c.png" width="60%">
 
 ---
-
+### 기여도
+백엔드(기여도 : 50%) : Controller와 Model 구현 및 MyBatis를 통한 스프링과 Oracle DB 연동, 프론트엔드(기여도 : 60%) 유지보수 작업 및 Tiles & Bootstrap 리팩토링
+프로젝트 참여 인원 : 6명
